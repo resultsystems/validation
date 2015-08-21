@@ -26,7 +26,7 @@ In your **config/app.php** add *'ResultSystems\Validation\ValidationServiceProvi
 'providers' => array(
     ...
     ...
-    'ResultSystems\Validation\ValidationServiceProvider',
+    ResultSystems\Validation\ValidationServiceProvider::class,
 ),
 ```
 
