@@ -1,0 +1,22 @@
+{
+    "name": "resultsystems/validation",
+    "description": "The power of 'Respect Validation' on Laravel.",
+    "keywords": ["validation", "laravel", "respect", "rules"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Leandro Henrique Reis",
+            "email": "resultsystems@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.9",
+        "kennedytedesco/validation": "~2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "ResultSystems\\Validation\\": "src/Validation"
+        }
+    },
+    "minimum-stability": "dev"
+}
