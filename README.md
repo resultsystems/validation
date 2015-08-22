@@ -18,7 +18,7 @@ Run the Composer **update** comand:
 composer update
 ```
 
-In your **config/app.php** add *'ResultSystems\Validation\ValidationServiceProvider'* to the end of the **'providers'** array:
+In your **config/app.php** add *'ResultSystems\Validation\ValidationServiceProvider::class'* to the end of the **'providers'** array:
 
 ```php
 'providers' => array(
