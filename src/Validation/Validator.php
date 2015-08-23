@@ -45,6 +45,19 @@ class Validator extends TedescoValidator
     }
 
     /**
+     * valida Telefone com mascara
+     * @param  string $attribute
+     * @param  string $value
+     * @param  string $parameters
+     *
+     * @return bool
+     */
+    public function validateTelefoneMascara($attribute, $value, $parameters)
+    {
+        return $this->validateTelefone($attribute, str_replace(array(' ', '/', '-'), '', $value), $parameters);
+    }
+
+    /**
      * valida Celular
      * @param  string $attribute
      * @param  string $value
@@ -61,6 +74,19 @@ class Validator extends TedescoValidator
         // XX XXXX-XXXX
         // XXXX - XXXX
         return preg_match('/^(0?[1-9]{2})?(([6-9][0-9]{7})|(9[0-9][0-9]{7}))$/', $value, $matches);
+    }
+
+    /**
+     * valida Celular com mascara
+     * @param  string $attribute
+     * @param  string $value
+     * @param  string $parameters
+     *
+     * @return bool
+     */
+    public function validateCelularMascara($attribute, $value, $parameters)
+    {
+        return $this->validateCelular($attribute, str_replace(array(' ', '/', '-'), '', $value), $parameters);
     }
 
     /**
