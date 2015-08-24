@@ -90,6 +90,92 @@ class Validator extends TedescoValidator
     }
 
     /**
+     * Valida Cnpj
+     * @param  string $attribute
+     * @param  string $value
+     * @param  string $parameters
+     * @return bool
+     */
+    public function validateCnpj($attribute, $value, $parameters)
+    {
+        // Code ported from Respect\Validation\Rules\Cnpj
+        //        $value = preg_replace('/\D/', '', $input);
+        $b = array(6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2);
+
+        if (strlen($value) != 14) {
+            return false;
+        }
+
+        for ($i = 0, $n = 0; $i < 12; $n += $value[$i] * $b[++$i]);
+
+        if ($value[12] != ((($n %= 11) < 2) ? 0 : 11 - $n)) {
+            return false;
+        }
+
+        for ($i = 0, $n = 0; $i <= 12; $n += $value[$i] * $b[$i++]);
+
+        if ($value[13] != ((($n %= 11) < 2) ? 0 : 11 - $n)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Valida Cnpj com mascara
+     * @param  string $attribute
+     * @param  string $value
+     * @param  string $parameters
+     * @return bool
+     */
+    public function validateCnpjMascara($attribute, $value, $parameters)
+    {
+        return $this->validateCnpj($attribute, preg_replace('/\D/', '', $input), $parameters);
+    }
+
+    /**
+     * Valida Cpf
+     * @param  string $attribute
+     * @param  string $value
+     * @param  string $parameters
+     * @return bool
+     */
+    public function validateCpf($attribute, $value, $parameters)
+    {
+        // Code ported from Respect\Validation\Rules\Cpf
+        //        $value = preg_replace('/\D/', '', $input);
+        if (strlen($value) != 11 || preg_match("/^{$value[0]}{11}$/", $value)) {
+            return false;
+        }
+
+        for ($s = 10, $n = 0, $i = 0; $s >= 2; $n += $value[$i++] * $s--);
+
+        if ($value[9] != ((($n %= 11) < 2) ? 0 : 11 - $n)) {
+            return false;
+        }
+
+        for ($s = 11, $n = 0, $i = 0; $s >= 2; $n += $value[$i++] * $s--);
+
+        if ($value[10] != ((($n %= 11) < 2) ? 0 : 11 - $n)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Valida Cpf com Mascara
+     * @param  string $attribute
+     * @param  string $value
+     * @param  string $parameters
+     * @return bool
+     */
+    public function validateCpfMascara($attribute, $value, $parameters)
+    {
+        return $this->validateCpf($attribute, preg_replace('/\D/', '', $input), $parameters);
+    }
+
+    /**
      * valida CPF/CNPJ
      * @param  string $attribute
      * @param  string $value
@@ -107,6 +193,18 @@ class Validator extends TedescoValidator
     }
 
     /**
+     * Valida Cnpj/Cpf com Mascara
+     * @param  string $attribute
+     * @param  string $value
+     * @param  string $parameters
+     * @return bool
+     */
+    public function validateCnpjCpfMascara($attribute, $value, $parameters)
+    {
+        return $this->validateCnpjCpf($attribute, preg_replace('/\D/', '', $input), $parameters);
+    }
+
+    /**
      * valida CPF/CNPJ possibilitando ter números zerados
      * @param  string $attribute
      * @param  string $value
@@ -121,6 +219,18 @@ class Validator extends TedescoValidator
         }
 
         return $this->validateCnpjCpf($attribute, $value, $parameters);
+    }
+
+    /**
+     * Valida Cnpj/Cpf com Mascara (tudo zero)
+     * @param  string $attribute
+     * @param  string $value
+     * @param  string $parameters
+     * @return bool
+     */
+    public function validateCnpjCpfZeroMascara($attribute, $value, $parameters)
+    {
+        return $this->validateCnpjCpfZero($attribute, preg_replace('/\D/', '', $input), $parameters);
     }
 
     /**
