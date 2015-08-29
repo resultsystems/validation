@@ -22,7 +22,7 @@ class Validator extends BaseValidator
     private $_validRules = [];
 
     /**
-     * Code ported from  KennedyTedesco/Validation.
+     * Copied code from  KennedyTedesco/Validation.
      *
      * Create a new Validator instance.
      *
@@ -81,6 +81,7 @@ class Validator extends BaseValidator
      * @param  string  $attribute
      * @param  string  $rule
      * @param  array   $parameters
+     *
      * @return string
      */
     protected function replaceRequiredIfNot($message, $attribute, $rule, $parameters)
@@ -182,6 +183,7 @@ class Validator extends BaseValidator
      * @param  string $attribute
      * @param  string $value
      * @param  string $parameters
+     *
      * @return bool
      */
     public function validateCnpj($attribute, $value, $parameters)
@@ -214,6 +216,7 @@ class Validator extends BaseValidator
      * @param  string $attribute
      * @param  string $value
      * @param  string $parameters
+     *
      * @return bool
      */
     public function validateCnpjMascara($attribute, $value, $parameters)
@@ -226,6 +229,7 @@ class Validator extends BaseValidator
      * @param  string $attribute
      * @param  string $value
      * @param  string $parameters
+     *
      * @return bool
      */
     public function validateCpf($attribute, $value, $parameters)
@@ -256,6 +260,7 @@ class Validator extends BaseValidator
      * @param  string $attribute
      * @param  string $value
      * @param  string $parameters
+     *
      * @return bool
      */
     public function validateCpfMascara($attribute, $value, $parameters)
@@ -285,6 +290,7 @@ class Validator extends BaseValidator
      * @param  string $attribute
      * @param  string $value
      * @param  string $parameters
+     *
      * @return bool
      */
     public function validateCnpjCpfMascara($attribute, $value, $parameters)
@@ -314,6 +320,7 @@ class Validator extends BaseValidator
      * @param  string $attribute
      * @param  string $value
      * @param  string $parameters
+     *
      * @return bool
      */
     public function validateCnpjCpfZeroMascara($attribute, $value, $parameters)
@@ -334,12 +341,13 @@ class Validator extends BaseValidator
     }
 
     /**
-     * Code ported from  KennedyTedesco/Validation.
+     * Copied code from  KennedyTedesco/Validation.
      *
      * Handle dynamic calls to class methods.
      *
      * @param  string  $method
      * @param  array   $parameters
+     *
      * @return mixed
      */
     public function __call($method, $parameters)
@@ -369,13 +377,14 @@ class Validator extends BaseValidator
     }
 
     /**
-     * Code ported from  KennedyTedesco/Validation.
+     * Copied code from  KennedyTedesco/Validation.
      *
      * Validate a minimum age.
      *
      * @param  string  $attribute
      * @param  mixed   $value
      * @param  array   $parameters
+     *
      * @return bool
      */
     public function validateMinimumAge($attribute, $value, $parameters)
@@ -386,13 +395,14 @@ class Validator extends BaseValidator
     }
 
     /**
-     * Code ported from  KennedyTedesco/Validation.
+     * Copied code from  KennedyTedesco/Validation.
      *
      * Validate if file exists.
      *
      * @param  string  $attribute
      * @param  mixed   $value
      * @param  array   $parameters
+     *
      * @return bool
      */
     public function validateFileExists($attribute, $value, $parameters)
@@ -401,7 +411,7 @@ class Validator extends BaseValidator
     }
 
     /**
-     * Code ported from  KennedyTedesco/Validation.
+     * Copied code from  KennedyTedesco/Validation.
      *
      * Replace all place-holders for the MinimumAge rule.
      *
@@ -409,6 +419,7 @@ class Validator extends BaseValidator
      * @param  string  $attribute
      * @param  string  $rule
      * @param  array   $parameters
+     *
      * @return string
      */
     protected function replaceMinimumAge($message, $attribute, $rule, $parameters)
@@ -417,7 +428,7 @@ class Validator extends BaseValidator
     }
 
     /**
-     * Code ported from  KennedyTedesco/Validation.
+     * Copied code from  KennedyTedesco/Validation.
      *
      * Replace all place-holders for the Contains rule.
      *
@@ -425,6 +436,7 @@ class Validator extends BaseValidator
      * @param  string  $attribute
      * @param  string  $rule
      * @param  array   $parameters
+     *
      * @return string
      */
     protected function replaceContains($message, $attribute, $rule, $parameters)
@@ -433,7 +445,7 @@ class Validator extends BaseValidator
     }
 
     /**
-     * Code ported from  KennedyTedesco/Validation.
+     * Copied code from  KennedyTedesco/Validation.
      *
      * Replace all place-holders for the Charset rule.
      *
@@ -441,6 +453,7 @@ class Validator extends BaseValidator
      * @param  string  $attribute
      * @param  string  $rule
      * @param  array   $parameters
+     *
      * @return string
      */
     protected function replaceCharset($message, $attribute, $rule, $parameters)
@@ -449,7 +462,7 @@ class Validator extends BaseValidator
     }
 
     /**
-     * Code ported from  KennedyTedesco/Validation.
+     * Copied code from  KennedyTedesco/Validation.
      *
      * Replace all place-holders for the EndsWith rule.
      *
@@ -457,6 +470,7 @@ class Validator extends BaseValidator
      * @param  string  $attribute
      * @param  string  $rule
      * @param  array   $parameters
+     *
      * @return string
      */
     protected function replaceEndsWith($message, $attribute, $rule, $parameters)
@@ -465,7 +479,7 @@ class Validator extends BaseValidator
     }
 
     /**
-     * Code ported from  KennedyTedesco/Validation.
+     * Copied code from  KennedyTedesco/Validation.
      *
      * Replace all place-holders for the Multiple rule.
      *
