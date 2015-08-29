@@ -2,12 +2,49 @@
 
 namespace ResultSystems\Validation;
 
-use KennedyTedesco\Validation\Validator as TedescoValidator;
+use Illuminate\Validation\Validator as BaseValidator;
+use Symfony\Component\Translation\TranslatorInterface;
 
-class Validator extends TedescoValidator
+class Validator extends BaseValidator
 {
+    /**
+     * Add Implicit Extension.
+     *
+     * @var array
+     */
     protected $addImplicitExtension = ['RequiredIfNot'];
 
+    /**
+     * All supported rules.
+     *
+     * @var array
+     */
+    private $_validRules = [];
+
+    /**
+     * Code ported from  KennedyTedesco/Validation.
+     *
+     * Create a new Validator instance.
+     *
+     * @param  \Symfony\Component\Translation\TranslatorInterface  $translator
+     * @param  array  $data
+     * @param  array  $rules
+     * @param  array  $messages
+     * @param  array  $customAttributes
+     */
+    public function __construct(TranslatorInterface $translator, array $data, array $rules, array $messages = [], array $customAttributes = [])
+    {
+        parent::__construct($translator, $data, $rules, $messages, $customAttributes);
+        $this->_validRules = $this->getValidRules();
+    }
+
+    /**
+     * Verify is Implicit rule and add implicit extensions.
+     *
+     * @param string
+     *
+     * @return array
+     */
     protected function isImplicit($rule)
     {
         return in_array($rule, array_merge($this->addImplicitExtension, $this->implicitRules));
@@ -19,6 +56,7 @@ class Validator extends TedescoValidator
      * @param  string  $attribute
      * @param  mixed   $value
      * @param  mixed   $parameters
+     *
      * @return bool
      */
     protected function validateRequiredIfNot($attribute, $value, $parameters)
@@ -48,7 +86,7 @@ class Validator extends TedescoValidator
     protected function replaceRequiredIfNot($message, $attribute, $rule, $parameters)
     {
         $values = implode(',', array_slice($parameters, 1));
-        $other  = $parameters[0];
+        $other = $parameters[0];
 
         $message = str_replace(':other', $other, $message);
         $message = str_replace(':value', $values, $message);
@@ -57,7 +95,7 @@ class Validator extends TedescoValidator
     }
 
     /**
-     * valida hora
+     * valida hora.
      * @param  string $attribute
      * @param  string $value
      * @param  string $parameters
@@ -70,7 +108,7 @@ class Validator extends TedescoValidator
     }
 
     /**
-     * valida Telefone
+     * valida Telefone.
      * @param  string $attribute
      * @param  string $value
      * @param  string $parameters
@@ -95,7 +133,7 @@ class Validator extends TedescoValidator
     }
 
     /**
-     * valida Telefone com mascara
+     * valida Telefone com mascara.
      * @param  string $attribute
      * @param  string $value
      * @param  string $parameters
@@ -104,11 +142,11 @@ class Validator extends TedescoValidator
      */
     public function validateTelefoneMascara($attribute, $value, $parameters)
     {
-        return $this->validateTelefone($attribute, str_replace(array(' ', '/', '-'), '', $value), $parameters);
+        return $this->validateTelefone($attribute, str_replace([' ', '/', '-'], '', $value), $parameters);
     }
 
     /**
-     * valida Celular
+     * valida Celular.
      * @param  string $attribute
      * @param  string $value
      * @param  string $parameters
@@ -127,7 +165,7 @@ class Validator extends TedescoValidator
     }
 
     /**
-     * valida Celular com mascara
+     * valida Celular com mascara.
      * @param  string $attribute
      * @param  string $value
      * @param  string $parameters
@@ -136,11 +174,11 @@ class Validator extends TedescoValidator
      */
     public function validateCelularMascara($attribute, $value, $parameters)
     {
-        return $this->validateCelular($attribute, str_replace(array(' ', '/', '-'), '', $value), $parameters);
+        return $this->validateCelular($attribute, str_replace([' ', '/', '-'], '', $value), $parameters);
     }
 
     /**
-     * Valida Cnpj
+     * Valida Cnpj.
      * @param  string $attribute
      * @param  string $value
      * @param  string $parameters
@@ -150,7 +188,7 @@ class Validator extends TedescoValidator
     {
         // Code ported from Respect\Validation\Rules\Cnpj
         //        $value = preg_replace('/\D/', '', $input);
-        $b = array(6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2);
+        $b = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
 
         if (strlen($value) != 14) {
             return false;
@@ -172,7 +210,7 @@ class Validator extends TedescoValidator
     }
 
     /**
-     * Valida Cnpj com mascara
+     * Valida Cnpj com mascara.
      * @param  string $attribute
      * @param  string $value
      * @param  string $parameters
@@ -184,7 +222,7 @@ class Validator extends TedescoValidator
     }
 
     /**
-     * Valida Cpf
+     * Valida Cpf.
      * @param  string $attribute
      * @param  string $value
      * @param  string $parameters
@@ -214,7 +252,7 @@ class Validator extends TedescoValidator
     }
 
     /**
-     * Valida Cpf com Mascara
+     * Valida Cpf com Mascara.
      * @param  string $attribute
      * @param  string $value
      * @param  string $parameters
@@ -226,7 +264,7 @@ class Validator extends TedescoValidator
     }
 
     /**
-     * valida CPF/CNPJ
+     * valida CPF/CNPJ.
      * @param  string $attribute
      * @param  string $value
      * @param  string $parameters
@@ -243,7 +281,7 @@ class Validator extends TedescoValidator
     }
 
     /**
-     * Valida Cnpj/Cpf com Mascara
+     * Valida Cnpj/Cpf com Mascara.
      * @param  string $attribute
      * @param  string $value
      * @param  string $parameters
@@ -255,7 +293,7 @@ class Validator extends TedescoValidator
     }
 
     /**
-     * valida CPF/CNPJ possibilitando ter números zerados
+     * valida CPF/CNPJ possibilitando ter números zerados.
      * @param  string $attribute
      * @param  string $value
      * @param  string $parameters
@@ -272,7 +310,7 @@ class Validator extends TedescoValidator
     }
 
     /**
-     * Valida Cnpj/Cpf com Mascara (tudo zero)
+     * Valida Cnpj/Cpf com Mascara (tudo zero).
      * @param  string $attribute
      * @param  string $value
      * @param  string $parameters
@@ -284,14 +322,161 @@ class Validator extends TedescoValidator
     }
 
     /**
-     * Verifica se o tamanho pode ser um CNPJ
+     * Verifica se o tamanho pode ser um CNPJ.
      *
      * @param  string  $value
      *
-     * @return boolean
+     * @return bool
      */
     public function isCnpj($value = '')
     {
         return (strlen($value) > 11);
+    }
+
+    /**
+     * Code ported from  KennedyTedesco/Validation.
+     *
+     * Handle dynamic calls to class methods.
+     *
+     * @param  string  $method
+     * @param  array   $parameters
+     * @return mixed
+     */
+    public function __call($method, $parameters)
+    {
+        $rule = lcfirst(substr($method, 8));
+        if (in_array($rule, $this->_validRules)) {
+            $args = $parameters[2];
+            $value = $parameters[1];
+            $ruleObject = RuleFactory::make($rule, $args);
+
+            return $ruleObject->validate($value);
+        }
+
+        return parent::__call($method, $parameters);
+    }
+
+    /**
+     * Get all supported rules from Respect.
+     *
+     * @return bool
+     */
+    protected function getValidRules()
+    {
+        $path = __DIR__.'/Respect/Rules.php';
+
+        return array_unique(require $path, SORT_REGULAR);
+    }
+
+    /**
+     * Code ported from  KennedyTedesco/Validation.
+     *
+     * Validate a minimum age.
+     *
+     * @param  string  $attribute
+     * @param  mixed   $value
+     * @param  array   $parameters
+     * @return bool
+     */
+    public function validateMinimumAge($attribute, $value, $parameters)
+    {
+        $parameter = (int) $parameters[0];
+
+        return RuleFactory::make('MinimumAge', [$parameter])->validate($value);
+    }
+
+    /**
+     * Code ported from  KennedyTedesco/Validation.
+     *
+     * Validate if file exists.
+     *
+     * @param  string  $attribute
+     * @param  mixed   $value
+     * @param  array   $parameters
+     * @return bool
+     */
+    public function validateFileExists($attribute, $value, $parameters)
+    {
+        return RuleFactory::make('exists', [])->validate($value);
+    }
+
+    /**
+     * Code ported from  KennedyTedesco/Validation.
+     *
+     * Replace all place-holders for the MinimumAge rule.
+     *
+     * @param  string  $message
+     * @param  string  $attribute
+     * @param  string  $rule
+     * @param  array   $parameters
+     * @return string
+     */
+    protected function replaceMinimumAge($message, $attribute, $rule, $parameters)
+    {
+        return str_replace(':age', $parameters[0], $message);
+    }
+
+    /**
+     * Code ported from  KennedyTedesco/Validation.
+     *
+     * Replace all place-holders for the Contains rule.
+     *
+     * @param  string  $message
+     * @param  string  $attribute
+     * @param  string  $rule
+     * @param  array   $parameters
+     * @return string
+     */
+    protected function replaceContains($message, $attribute, $rule, $parameters)
+    {
+        return str_replace(':value', $parameters[0], $message);
+    }
+
+    /**
+     * Code ported from  KennedyTedesco/Validation.
+     *
+     * Replace all place-holders for the Charset rule.
+     *
+     * @param  string  $message
+     * @param  string  $attribute
+     * @param  string  $rule
+     * @param  array   $parameters
+     * @return string
+     */
+    protected function replaceCharset($message, $attribute, $rule, $parameters)
+    {
+        return str_replace(':charset', $parameters[0], $message);
+    }
+
+    /**
+     * Code ported from  KennedyTedesco/Validation.
+     *
+     * Replace all place-holders for the EndsWith rule.
+     *
+     * @param  string  $message
+     * @param  string  $attribute
+     * @param  string  $rule
+     * @param  array   $parameters
+     * @return string
+     */
+    protected function replaceEndsWith($message, $attribute, $rule, $parameters)
+    {
+        return str_replace(':value', $parameters[0], $message);
+    }
+
+    /**
+     * Code ported from  KennedyTedesco/Validation.
+     *
+     * Replace all place-holders for the Multiple rule.
+     *
+     * @param  string  $message
+     * @param  string  $attribute
+     * @param  string  $rule
+     * @param  array   $parameters
+     * @return string
+     */
+    protected function replaceMultiple($message, $attribute, $rule, $parameters)
+    {
+        return str_replace(':value', $parameters[0], $message);
     }
 }

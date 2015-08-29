@@ -48,6 +48,7 @@ $rules = array(
     'celular'               => 'celular',
     'celular_mascara'       => 'celular_mascara',
     'hora'                  => 'hora',
+    'required_if_not'       => 'required_if_not',
     'cnh'                   => 'cnh', // Carteira Nacional de Habilitação
     'minimum_age'           => 'minimumAge:20',
     'callback'              => 'callback:is_int',
@@ -119,6 +120,7 @@ $data = array(
     'celular'               => '4191234567',
     'celular_mascara'       => '41 9123-4567',
     'hora'                  => '18:40',
+    'adicional'             => 'required_if_not,Tipo:5',
     'cnh'                   => '02650306461',
     'minimum_age'           => '10/10/1990',
     'callback'              => 20,
@@ -194,11 +196,11 @@ else
 }
 ```
 
+Code ported from https://github.com/KennedyTedesco/Validation
+
 # Respect Validation
 
 For more details on the rules:
-
-https://github.com/KennedyTedesco/Validation
 
 https://github.com/Respect/Validation
 
