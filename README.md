@@ -196,7 +196,7 @@ else
 }
 ```
 
-Code ported from https://github.com/KennedyTedesco/Validation
+Code inspired from https://github.com/KennedyTedesco/Validation
 
 # Respect Validation
 
