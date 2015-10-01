@@ -105,7 +105,7 @@ class Validator extends BaseValidator
      */
     public function validateHora($attribute, $value, $parameters)
     {
-        return preg_match('/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/', $value, $matches);
+        return preg_match('/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/', $value, $matches);
     }
 
     /**
