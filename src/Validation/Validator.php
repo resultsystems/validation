@@ -295,7 +295,7 @@ class Validator extends BaseValidator
      */
     public function validateCnpjCpfMascara($attribute, $value, $parameters)
     {
-        return $this->validateCnpjCpf($attribute, preg_replace('/\D/', '', $input), $parameters);
+        return $this->validateCnpjCpf($attribute, preg_replace('/\D/', '', $value), $parameters);
     }
 
     /**
