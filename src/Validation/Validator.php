@@ -87,7 +87,7 @@ class Validator extends BaseValidator
     protected function replaceRequiredIfNot($message, $attribute, $rule, $parameters)
     {
         $values = implode(',', array_slice($parameters, 1));
-        $other = $parameters[0];
+        $other  = $parameters[0];
 
         $message = str_replace(':other', $other, $message);
         $message = str_replace(':value', $values, $message);
@@ -189,7 +189,7 @@ class Validator extends BaseValidator
     public function validateCnpj($attribute, $value, $parameters)
     {
         // Code ported from Respect\Validation\Rules\Cnpj
-        //        $value = preg_replace('/\D/', '', $input);
+        //        $value = preg_replace('/\D/', '', $value);
         $b = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
 
         if (strlen($value) != 14) {
@@ -221,7 +221,7 @@ class Validator extends BaseValidator
      */
     public function validateCnpjMascara($attribute, $value, $parameters)
     {
-        return $this->validateCnpj($attribute, preg_replace('/\D/', '', $input), $parameters);
+        return $this->validateCnpj($attribute, preg_replace('/\D/', '', $value), $parameters);
     }
 
     /**
@@ -235,7 +235,7 @@ class Validator extends BaseValidator
     public function validateCpf($attribute, $value, $parameters)
     {
         // Code ported from Respect\Validation\Rules\Cpf
-        //        $value = preg_replace('/\D/', '', $input);
+        //        $value = preg_replace('/\D/', '', $value);
         if (strlen($value) != 11 || preg_match("/^{$value[0]}{11}$/", $value)) {
             return false;
         }
@@ -265,7 +265,7 @@ class Validator extends BaseValidator
      */
     public function validateCpfMascara($attribute, $value, $parameters)
     {
-        return $this->validateCpf($attribute, preg_replace('/\D/', '', $input), $parameters);
+        return $this->validateCpf($attribute, preg_replace('/\D/', '', $value), $parameters);
     }
 
     /**
@@ -325,7 +325,7 @@ class Validator extends BaseValidator
      */
     public function validateCnpjCpfZeroMascara($attribute, $value, $parameters)
     {
-        return $this->validateCnpjCpfZero($attribute, preg_replace('/\D/', '', $input), $parameters);
+        return $this->validateCnpjCpfZero($attribute, preg_replace('/\D/', '', $value), $parameters);
     }
 
     /**
@@ -354,8 +354,8 @@ class Validator extends BaseValidator
     {
         $rule = lcfirst(substr($method, 8));
         if (in_array($rule, $this->_validRules)) {
-            $args = $parameters[2];
-            $value = $parameters[1];
+            $args       = $parameters[2];
+            $value      = $parameters[1];
             $ruleObject = RuleFactory::make($rule, $args);
 
             return $ruleObject->validate($value);
@@ -371,7 +371,7 @@ class Validator extends BaseValidator
      */
     protected function getValidRules()
     {
-        $path = __DIR__.'/Respect/Rules.php';
+        $path = __DIR__ . '/Respect/Rules.php';
 
         return array_unique(require $path, SORT_REGULAR);
     }
