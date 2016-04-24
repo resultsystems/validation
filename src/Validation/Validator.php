@@ -2,11 +2,54 @@
 
 namespace ResultSystems\Validation;
 
+use Exception;
 use Illuminate\Validation\Validator as BaseValidator;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class Validator extends BaseValidator
 {
+    /**
+     * Copied code from  KennedyTedesco/Validation.
+     *
+     * Handle dynamic calls to class methods.
+     *
+     * @param  string  $method
+     * @param  array   $parameters
+     *
+     * @return mixed
+     */
+    public function __call($method, $parameters)
+    {
+        try {
+            $rule = substr($method, 8);
+            $args = $parameters[2];
+            $value = $parameters[1];
+            $validation = RuleFactory::make($rule, $args);
+
+            return $validation->validate($value);
+        } catch (Exception $e) {
+            return parent::__call($method, $parameters);
+        }
+    }
+    /**
+     * Replace all error message place-holders with actual values.
+     *
+     * @param  string  $message
+     * @param  string  $attribute
+     * @param  string  $rule
+     * @param  array   $parameters
+     * @return string
+     */
+    protected function doReplacements($message, $attribute, $rule, $parameters)
+    {
+        $message = parent::doReplacements($message, $attribute, $rule, $parameters);
+        $search = [];
+        foreach ($parameters as $key => $parameter) {
+            array_push($search, ':parameter'.$key);
+        }
+
+        return str_replace($search, $parameters, $message);
+    }
+
     /**
      * Add Implicit Extension.
      *
@@ -20,23 +63,6 @@ class Validator extends BaseValidator
      * @var array
      */
     private $_validRules = [];
-
-    /**
-     * Copied code from  KennedyTedesco/Validation.
-     *
-     * Create a new Validator instance.
-     *
-     * @param  \Symfony\Component\Translation\TranslatorInterface  $translator
-     * @param  array  $data
-     * @param  array  $rules
-     * @param  array  $messages
-     * @param  array  $customAttributes
-     */
-    public function __construct(TranslatorInterface $translator, array $data, array $rules, array $messages = [], array $customAttributes = [])
-    {
-        parent::__construct($translator, $data, $rules, $messages, $customAttributes);
-        $this->_validRules = $this->getValidRules();
-    }
 
     /**
      * Verify is Implicit rule and add implicit extensions.
@@ -87,7 +113,7 @@ class Validator extends BaseValidator
     protected function replaceRequiredIfNot($message, $attribute, $rule, $parameters)
     {
         $values = implode(',', array_slice($parameters, 1));
-        $other  = $parameters[0];
+        $other = $parameters[0];
 
         $message = str_replace(':other', $other, $message);
         $message = str_replace(':value', $values, $message);
@@ -96,16 +122,21 @@ class Validator extends BaseValidator
     }
 
     /**
-     * valida hora.
+     * Valid time.
      * @param  string $attribute
      * @param  string $value
      * @param  string $parameters
      *
      * @return bool
      */
-    public function validateHora($attribute, $value, $parameters)
+    public function validateTime($attribute, $value, $parameters)
     {
         return preg_match('/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/', $value, $matches);
+    }
+
+    public function validateHora($attribute, $value, $parameters)
+    {
+        return $this->validateTime($attribute, $value, $parameters);
     }
 
     /**
@@ -116,7 +147,7 @@ class Validator extends BaseValidator
      *
      * @return bool
      */
-    public function validateTelefone($attribute, $value, $parameters)
+    public function validatePhoneBr($attribute, $value, $parameters)
     {
         $result = false;
 
@@ -131,6 +162,11 @@ class Validator extends BaseValidator
 
         //Verifica 0800
         return preg_match('/^0800([0-9]{7,8})$/', $value, $matches);
+    }
+
+    public function validateTelefone($attribute, $value, $parameters)
+    {
+        return $this->validatePhoneBr($attribute, $value, $parameters);
     }
 
     /**
@@ -154,7 +190,7 @@ class Validator extends BaseValidator
      *
      * @return bool
      */
-    public function validateCelular($attribute, $value, $parameters)
+    public function validateCellphoneBr($attribute, $value, $parameters)
     {
         $result = false;
 
@@ -163,6 +199,11 @@ class Validator extends BaseValidator
         // XX XXXX-XXXX
         // XXXX - XXXX
         return preg_match('/^(0?[1-9]{2})?(([6-9][0-9]{7})|(9[0-9][0-9]{7}))$/', $value, $matches);
+    }
+
+    public function validateCelular($attribute, $value, $parameters)
+    {
+        return $this->validateCellphoneBr($attribute, $value, $parameters);
     }
 
     /**
@@ -341,37 +382,13 @@ class Validator extends BaseValidator
     }
 
     /**
-     * Copied code from  KennedyTedesco/Validation.
-     *
-     * Handle dynamic calls to class methods.
-     *
-     * @param  string  $method
-     * @param  array   $parameters
-     *
-     * @return mixed
-     */
-    public function __call($method, $parameters)
-    {
-        $rule = lcfirst(substr($method, 8));
-        if (in_array($rule, $this->_validRules)) {
-            $args       = $parameters[2];
-            $value      = $parameters[1];
-            $ruleObject = RuleFactory::make($rule, $args);
-
-            return $ruleObject->validate($value);
-        }
-
-        return parent::__call($method, $parameters);
-    }
-
-    /**
      * Get all supported rules from Respect.
      *
      * @return bool
      */
     protected function getValidRules()
     {
-        $path = __DIR__ . '/Respect/Rules.php';
+        $path = __DIR__.'/Respect/Rules.php';
 
         return array_unique(require $path, SORT_REGULAR);
     }

@@ -3,12 +3,17 @@
 Validation (Laravel Package)
 ==========
 
-### Laravel 5.0 and Laravel 5.1
+### Laravel 5.2
 
 In the **require** key of **composer.json** file add the following:
 
 ```php
-"resultsystems/validation": "~1.0"
+"resultsystems/validation": "~2.0"
+```
+or
+
+```php
+composer require resultsystems/validation
 ```
 
 

@@ -14,6 +14,7 @@ class ValidationServiceProvider extends ServiceProvider
     public function register()
     {
     }
+
     /**
      * Bootstrap the application events.
      *
