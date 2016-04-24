@@ -3,17 +3,20 @@
 Validation (Laravel Package)
 ==========
 
-### Laravel 5.2
+### For Laravel 5.0/5.1
 
 In the **require** key of **composer.json** file add the following:
 
 ```php
 "resultsystems/validation": "~2.0"
 ```
-or
+
+### For Laravel 5.2
+
+In the **require** key of **composer.json** file add the following:
 
 ```php
-composer require resultsystems/validation
+"resultsystems/validation": "~2.0"
 ```
 
 
@@ -24,6 +27,12 @@ Run the Composer **update** comand:
 ```php
 composer update
 ```
+or
+
+```php
+composer require resultsystems/validation
+```
+
 
 In your **config/app.php** add *'ResultSystems\Validation\ValidationServiceProvider::class'* to the end of the **'providers'** array:
 
