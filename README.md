@@ -49,6 +49,8 @@ In your **config/app.php** add *'ResultSystems\Validation\ValidationServiceProvi
 ```php
 // Rules
 $rules = array(
+    'nis'                   => 'nis',
+    'titulo_eleitoral'                   => 'titulo_eleitoral',
     'cpf'                   => 'cpf',
     'cpf_mascara'           => 'cpf_mascara',
     'cnpj'                  => 'cnpj',
@@ -122,6 +124,8 @@ $rules = array(
 
 // Data
 $data = array(
+    'nis'                   => '17033259504',
+    'titulo_eleitoral'                   => '000000000000',
     'cpf'                   => '22205417118',
     'cpf_mascara'           => '222.054.171-18',
     'cnpj'                  => '68518321000116',

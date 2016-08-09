@@ -428,6 +428,71 @@ class Validator extends BaseValidator
     }
 
     /**
+     * Based by code from  https://gist.github.com/paulofreitas/4704673.
+     *
+     * Validate if file exists.
+     *
+     * @param  string  $attribute
+     * @param  mixed   $value
+     * @param  array   $parameters
+     *
+     * @return bool
+     */
+    public function validateTituloEleitoral($attribute, $value, $parameters)
+    {
+        // Canonicalize input and parse UF
+        $te = sprintf('%012s', $value);
+        $uf = intval(substr($value, 8, 2));
+        // Validate length and invalid UFs
+        if ((strlen($te) != 12)
+            || ($uf < 1)
+            || ($uf > 28)) {
+            return false;
+        }
+        // Validate check digits using a slightly modified modulus 11 algorithm
+        foreach ([7, 8 => 10] as $s => $t) {
+            for ($d = 0, $p = 2, $c = $t; $c >= $s; $c--, $p++) {
+                $d += $te[$c] * $p;
+            }
+            if ($te[($s) ? 11 : 10] != ((($d %= 11) < 2) ? (($uf < 3) ? 1 - $d
+                : 0)
+                : 11 - $d)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Based by code from  https://gist.github.com/paulofreitas/4704673.
+     *
+     * Validate if file exists.
+     *
+     * @param  string  $attribute
+     * @param  mixed   $value
+     * @param  array   $parameters
+     *
+     * @return bool
+     */
+    public function validateNis($attribute, $value, $parameters)
+    {
+        // Canonicalize input
+        $nis = sprintf('%011s', $value);
+        // Validate length and invalid numbers
+        if ((strlen($nis) != 11)
+            || (intval($nis) == 0)) {
+            return false;
+        }
+        // Validate check digit using a modulus 11 algorithm
+        for ($d = 0, $p = 2, $c = 9; $c >= 0; $c--, ($p < 9) ? $p++ : $p = 2) {
+            $d += $nis[$c] * $p;
+        }
+
+        return ($nis[10] == (((10 * $d) % 11) % 10));
+    }
+
+    /**
      * Copied code from  KennedyTedesco/Validation.
      *
      * Replace all place-holders for the MinimumAge rule.
