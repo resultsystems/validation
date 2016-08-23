@@ -19,6 +19,13 @@ In the **require** key of **composer.json** file add the following:
 "resultsystems/validation": "~2.0"
 ```
 
+### For Laravel 5.3
+
+In the **require** key of **composer.json** file add the following:
+
+```php
+"resultsystems/validation": "~3.0"
+```
 
 **Important:** Do not use `dev-master`. Instead, use the tagged version, like shown before.
 
