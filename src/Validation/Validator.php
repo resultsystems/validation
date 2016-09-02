@@ -99,6 +99,21 @@ class Validator extends BaseValidator
 
         return true;
     }
+    
+    /**
+     * Validate uuid
+     * by @ericson
+     *
+     * @param  string  $attribute
+     * @param  mixed   $value
+     * @param  mixed   $parameters
+     *
+     * @return bool
+     */
+    protected function validateUuid($attribute, $value, $parameters)
+    {
+    	return preg_match('/^[[:xdigit:]]{8}\-[[:xdigit:]]{4}\-[[:xdigit:]]{4}\-[[:xdigit:]]{4}\-[[:xdigit:]]{12}$/', $value) === 1;
+    }
 
     /**
      * Replace all place-holders for the required_if rule.
