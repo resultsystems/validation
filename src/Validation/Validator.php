@@ -89,7 +89,7 @@ class Validator extends BaseValidator
     {
         $this->requireParameterCount(2, $parameters, 'required_if_not');
 
-        $data = Arr::get($this->data, $parameters[0]);
+        $data = array_get($this->data, $parameters[0]);
 
         $values = array_slice($parameters, 1);
 
@@ -99,10 +99,10 @@ class Validator extends BaseValidator
 
         return true;
     }
-    
+
     /**
      * Validate uuid
-     * by @ericson
+     * by @ericson.
      *
      * @param  string  $attribute
      * @param  mixed   $value
@@ -112,7 +112,7 @@ class Validator extends BaseValidator
      */
     protected function validateUuid($attribute, $value, $parameters)
     {
-    	return preg_match('/^[[:xdigit:]]{8}\-[[:xdigit:]]{4}\-[[:xdigit:]]{4}\-[[:xdigit:]]{4}\-[[:xdigit:]]{12}$/', $value) === 1;
+        return preg_match('/^[[:xdigit:]]{8}\-[[:xdigit:]]{4}\-[[:xdigit:]]{4}\-[[:xdigit:]]{4}\-[[:xdigit:]]{12}$/', $value) === 1;
     }
 
     /**
@@ -252,13 +252,17 @@ class Validator extends BaseValidator
             return false;
         }
 
-        for ($i = 0, $n = 0; $i < 12; $n += $value[$i] * $b[++$i]);
+        for ($i = 0, $n = 0; $i < 12;
+            $n += $value[$i] * $b[++$i]) {
+        }
 
         if ($value[12] != ((($n %= 11) < 2) ? 0 : 11 - $n)) {
             return false;
         }
 
-        for ($i = 0, $n = 0; $i <= 12; $n += $value[$i] * $b[$i++]);
+        for ($i = 0, $n = 0; $i <= 12;
+            $n += $value[$i] * $b[$i++]) {
+        }
 
         if ($value[13] != ((($n %= 11) < 2) ? 0 : 11 - $n)) {
             return false;
@@ -296,13 +300,17 @@ class Validator extends BaseValidator
             return false;
         }
 
-        for ($s = 10, $n = 0, $i = 0; $s >= 2; $n += $value[$i++] * $s--);
+        for ($s = 10, $n = 0, $i = 0; $s >= 2;
+            $n += $value[$i++] * $s--) {
+        }
 
         if ($value[9] != ((($n %= 11) < 2) ? 0 : 11 - $n)) {
             return false;
         }
 
-        for ($s = 11, $n = 0, $i = 0; $s >= 2; $n += $value[$i++] * $s--);
+        for ($s = 11, $n = 0, $i = 0; $s >= 2;
+            $n += $value[$i++] * $s--) {
+        }
 
         if ($value[10] != ((($n %= 11) < 2) ? 0 : 11 - $n)) {
             return false;
