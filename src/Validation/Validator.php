@@ -2,7 +2,6 @@
 
 namespace ResultSystems\Validation;
 
-use Arr;
 use Exception;
 use Illuminate\Validation\Validator as BaseValidator;
 
@@ -90,7 +89,7 @@ class Validator extends BaseValidator
     {
         $this->requireParameterCount(2, $parameters, 'required_if_not');
 
-        $data = Arr::get($this->data, $parameters[0]);
+        $data = array_get($this->data, $parameters[0]);
 
         $values = array_slice($parameters, 1);
 
@@ -254,7 +253,7 @@ class Validator extends BaseValidator
         }
 
         for ($i = 0, $n = 0; $i < 12;
-        $n += $value[$i] * $b[++$i]) {
+            $n += $value[$i] * $b[++$i]) {
         }
 
         if ($value[12] != ((($n %= 11) < 2) ? 0 : 11 - $n)) {
@@ -262,7 +261,7 @@ class Validator extends BaseValidator
         }
 
         for ($i = 0, $n = 0; $i <= 12;
-        $n += $value[$i] * $b[$i++]) {
+            $n += $value[$i] * $b[$i++]) {
         }
 
         if ($value[13] != ((($n %= 11) < 2) ? 0 : 11 - $n)) {
@@ -302,7 +301,7 @@ class Validator extends BaseValidator
         }
 
         for ($s = 10, $n = 0, $i = 0; $s >= 2;
-        $n += $value[$i++] * $s--) {
+            $n += $value[$i++] * $s--) {
         }
 
         if ($value[9] != ((($n %= 11) < 2) ? 0 : 11 - $n)) {
@@ -310,7 +309,7 @@ class Validator extends BaseValidator
         }
 
         for ($s = 11, $n = 0, $i = 0; $s >= 2;
-        $n += $value[$i++] * $s--) {
+            $n += $value[$i++] * $s--) {
         }
 
         if ($value[10] != ((($n %= 11) < 2) ? 0 : 11 - $n)) {
