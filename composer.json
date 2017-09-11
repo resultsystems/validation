@@ -19,5 +19,12 @@
             "ResultSystems\\Validation\\": "src/Validation"
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ResultSystems\\Validation\\ValidationServiceProvider"
+            ]
+        }
+    }
 }
