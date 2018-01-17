@@ -3,17 +3,32 @@
 namespace ResultSystems\Validation;
 
 use Exception;
+use Illuminate\Support\Arr;
 use Illuminate\Validation\Validator as BaseValidator;
 
 class Validator extends BaseValidator
 {
     /**
+     * Add Implicit Extension.
+     *
+     * @var array
+     */
+    protected $addImplicitExtension = ['RequiredIfNot'];
+
+    /**
+     * All supported rules.
+     *
+     * @var array
+     */
+    private $_validRules = [];
+
+    /**
      * Copied code from  KennedyTedesco/Validation.
      *
      * Handle dynamic calls to class methods.
      *
-     * @param  string  $method
-     * @param  array   $parameters
+     * @param string $method
+     * @param array  $parameters
      *
      * @return mixed
      */
@@ -30,117 +45,71 @@ class Validator extends BaseValidator
             return parent::__call($method, $parameters);
         }
     }
-    /**
-     * Replace all error message place-holders with actual values.
-     *
-     * @param  string  $message
-     * @param  string  $attribute
-     * @param  string  $rule
-     * @param  array   $parameters
-     * @return string
-     */
-    protected function doReplacements($message, $attribute, $rule, $parameters)
-    {
-        $message = parent::doReplacements($message, $attribute, $rule, $parameters);
-        $search = [];
-        foreach ($parameters as $key => $parameter) {
-            array_push($search, ':parameter'.$key);
-        }
-
-        return str_replace($search, $parameters, $message);
-    }
 
     /**
-     * Add Implicit Extension.
+     * Valid min time.
      *
-     * @var array
-     */
-    protected $addImplicitExtension = ['RequiredIfNot'];
-
-    /**
-     * All supported rules.
-     *
-     * @var array
-     */
-    private $_validRules = [];
-
-    /**
-     * Verify is Implicit rule and add implicit extensions.
-     *
-     * @param string
-     *
-     * @return array
-     */
-    protected function isImplicit($rule)
-    {
-        return in_array($rule, array_merge($this->addImplicitExtension, $this->implicitRules));
-    }
-
-    /**
-     * Validate that an attribute exists when another attribute has a given value.
-     *
-     * @param  string  $attribute
-     * @param  mixed   $value
-     * @param  mixed   $parameters
+     * @param string $attribute
+     * @param string $value
+     * @param string $parameters
      *
      * @return bool
      */
-    protected function validateRequiredIfNot($attribute, $value, $parameters)
+    public function validateMinTime($attribute, $value, $parameters)
     {
-        $this->requireParameterCount(2, $parameters, 'required_if_not');
+        $this->requireParameterCount(1, $parameters, 'min_time');
 
-        $data = array_get($this->data, $parameters[0]);
+        $valid = $this->validateTime($attribute, $value, $parameters);
 
-        $values = array_slice($parameters, 1);
-
-        if (!in_array($data, $values)) {
-            return $this->validateRequired($attribute, $value);
+        if (!$valid) {
+            return false;
         }
 
-        return true;
+        $other = Arr::get($this->data, $parameters[0]);
+
+        $time = $this->validateTime($parameters[0], $other, []);
+        if (!$time) {
+            return false;
+        }
+
+        return $value >= $other;
     }
 
     /**
-     * Validate uuid
-     * by @ericson.
+     * Valid after time.
      *
-     * @param  string  $attribute
-     * @param  mixed   $value
-     * @param  mixed   $parameters
+     * @param string $attribute
+     * @param string $value
+     * @param string $parameters
      *
      * @return bool
      */
-    protected function validateUuid($attribute, $value, $parameters)
+    public function validateAfterTime($attribute, $value, $parameters)
     {
-        return preg_match('/^[[:xdigit:]]{8}\-[[:xdigit:]]{4}\-[[:xdigit:]]{4}\-[[:xdigit:]]{4}\-[[:xdigit:]]{12}$/', $value) === 1;
-    }
+        $this->requireParameterCount(1, $parameters, 'min_time');
 
-    /**
-     * Replace all place-holders for the required_if rule.
-     *
-     * @param  string  $message
-     * @param  string  $attribute
-     * @param  string  $rule
-     * @param  array   $parameters
-     *
-     * @return string
-     */
-    protected function replaceRequiredIfNot($message, $attribute, $rule, $parameters)
-    {
-        $values = implode(',', array_slice($parameters, 1));
-        $other = $parameters[0];
+        $valid = $this->validateTime($attribute, $value, $parameters);
 
-        $message = str_replace(':other', $other, $message);
-        $message = str_replace(':value', $values, $message);
+        if (!$valid) {
+            return false;
+        }
 
-        return $message;
+        $other = Arr::get($this->data, $parameters[0]);
+
+        $time = $this->validateTime($parameters[0], $other, []);
+        if (!$time) {
+            return false;
+        }
+
+        return $value > $other;
     }
 
     /**
      * Valid time.
-     * @param  string $attribute
-     * @param  string $value
-     * @param  string $parameters
+     *
+     * @param string $attribute
+     * @param string $value
+     * @param string $parameters
      *
      * @return bool
      */
@@ -156,9 +125,10 @@ class Validator extends BaseValidator
 
     /**
      * valida Telefone.
-     * @param  string $attribute
-     * @param  string $value
-     * @param  string $parameters
+     *
+     * @param string $attribute
+     * @param string $value
+     * @param string $parameters
      *
      * @return bool
      */
@@ -186,9 +156,10 @@ class Validator extends BaseValidator
 
     /**
      * valida Telefone com mascara.
-     * @param  string $attribute
-     * @param  string $value
-     * @param  string $parameters
+     *
+     * @param string $attribute
+     * @param string $value
+     * @param string $parameters
      *
      * @return bool
      */
@@ -199,9 +170,10 @@ class Validator extends BaseValidator
 
     /**
      * valida Celular.
-     * @param  string $attribute
-     * @param  string $value
-     * @param  string $parameters
+     *
+     * @param string $attribute
+     * @param string $value
+     * @param string $parameters
      *
      * @return bool
      */
@@ -223,9 +195,10 @@ class Validator extends BaseValidator
 
     /**
      * valida Celular com mascara.
-     * @param  string $attribute
-     * @param  string $value
-     * @param  string $parameters
+     *
+     * @param string $attribute
+     * @param string $value
+     * @param string $parameters
      *
      * @return bool
      */
@@ -236,9 +209,10 @@ class Validator extends BaseValidator
 
     /**
      * Valida Cnpj.
-     * @param  string $attribute
-     * @param  string $value
-     * @param  string $parameters
+     *
+     * @param string $attribute
+     * @param string $value
+     * @param string $parameters
      *
      * @return bool
      */
@@ -248,7 +222,7 @@ class Validator extends BaseValidator
         //        $value = preg_replace('/\D/', '', $value);
         $b = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
 
-        if (strlen($value) != 14) {
+        if (14 !== strlen($value)) {
             return false;
         }
 
@@ -256,7 +230,7 @@ class Validator extends BaseValidator
             $n += $value[$i] * $b[++$i]) {
         }
 
-        if ($value[12] != ((($n %= 11) < 2) ? 0 : 11 - $n)) {
+        if ($value[12] !== ((($n %= 11) < 2) ? 0 : 11 - $n)) {
             return false;
         }
 
@@ -264,7 +238,7 @@ class Validator extends BaseValidator
             $n += $value[$i] * $b[$i++]) {
         }
 
-        if ($value[13] != ((($n %= 11) < 2) ? 0 : 11 - $n)) {
+        if ($value[13] !== ((($n %= 11) < 2) ? 0 : 11 - $n)) {
             return false;
         }
 
@@ -273,9 +247,10 @@ class Validator extends BaseValidator
 
     /**
      * Valida Cnpj com mascara.
-     * @param  string $attribute
-     * @param  string $value
-     * @param  string $parameters
+     *
+     * @param string $attribute
+     * @param string $value
+     * @param string $parameters
      *
      * @return bool
      */
@@ -286,9 +261,10 @@ class Validator extends BaseValidator
 
     /**
      * Valida Cpf.
-     * @param  string $attribute
-     * @param  string $value
-     * @param  string $parameters
+     *
+     * @param string $attribute
+     * @param string $value
+     * @param string $parameters
      *
      * @return bool
      */
@@ -296,7 +272,7 @@ class Validator extends BaseValidator
     {
         // Code ported from Respect\Validation\Rules\Cpf
         //        $value = preg_replace('/\D/', '', $value);
-        if (strlen($value) != 11 || preg_match("/^{$value[0]}{11}$/", $value)) {
+        if (11 !== strlen($value) || preg_match("/^{$value[0]}{11}$/", $value)) {
             return false;
         }
 
@@ -304,7 +280,7 @@ class Validator extends BaseValidator
             $n += $value[$i++] * $s--) {
         }
 
-        if ($value[9] != ((($n %= 11) < 2) ? 0 : 11 - $n)) {
+        if ($value[9] !== ((($n %= 11) < 2) ? 0 : 11 - $n)) {
             return false;
         }
 
@@ -312,7 +288,7 @@ class Validator extends BaseValidator
             $n += $value[$i++] * $s--) {
         }
 
-        if ($value[10] != ((($n %= 11) < 2) ? 0 : 11 - $n)) {
+        if ($value[10] !== ((($n %= 11) < 2) ? 0 : 11 - $n)) {
             return false;
         }
 
@@ -321,9 +297,10 @@ class Validator extends BaseValidator
 
     /**
      * Valida Cpf com Mascara.
-     * @param  string $attribute
-     * @param  string $value
-     * @param  string $parameters
+     *
+     * @param string $attribute
+     * @param string $value
+     * @param string $parameters
      *
      * @return bool
      */
@@ -334,9 +311,10 @@ class Validator extends BaseValidator
 
     /**
      * valida CPF/CNPJ.
-     * @param  string $attribute
-     * @param  string $value
-     * @param  string $parameters
+     *
+     * @param string $attribute
+     * @param string $value
+     * @param string $parameters
      *
      * @return bool
      */
@@ -351,9 +329,10 @@ class Validator extends BaseValidator
 
     /**
      * Valida Cnpj/Cpf com Mascara.
-     * @param  string $attribute
-     * @param  string $value
-     * @param  string $parameters
+     *
+     * @param string $attribute
+     * @param string $value
+     * @param string $parameters
      *
      * @return bool
      */
@@ -364,15 +343,16 @@ class Validator extends BaseValidator
 
     /**
      * valida CPF/CNPJ possibilitando ter números zerados.
-     * @param  string $attribute
-     * @param  string $value
-     * @param  string $parameters
+     *
+     * @param string $attribute
+     * @param string $value
+     * @param string $parameters
      *
      * @return bool
      */
     public function validateCnpjCpfZero($attribute, $value, $parameters)
     {
-        if ($value == '00000000000' || $value == '00000000000000') {
+        if ('00000000000' === $value || '00000000000000' === $value) {
             return true;
         }
 
@@ -381,9 +361,10 @@ class Validator extends BaseValidator
 
     /**
      * Valida Cnpj/Cpf com Mascara (tudo zero).
-     * @param  string $attribute
-     * @param  string $value
-     * @param  string $parameters
+     *
+     * @param string $attribute
+     * @param string $value
+     * @param string $parameters
      *
      * @return bool
      */
@@ -395,13 +376,240 @@ class Validator extends BaseValidator
     /**
      * Verifica se o tamanho pode ser um CNPJ.
      *
-     * @param  string  $value
+     * @param string $value
      *
      * @return bool
      */
     public function isCnpj($value = '')
     {
-        return (strlen($value) > 11);
+        return strlen($value) > 11;
+    }
+
+    /**
+     * Copied code from  KennedyTedesco/Validation.
+     *
+     * Validate a minimum age.
+     *
+     * @param string $attribute
+     * @param mixed  $value
+     * @param array  $parameters
+     *
+     * @return bool
+     */
+    public function validateMinimumAge($attribute, $value, $parameters)
+    {
+        $parameter = (int) $parameters[0];
+
+        return RuleFactory::make('MinimumAge', [$parameter])->validate($value);
+    }
+
+    /**
+     * Copied code from  KennedyTedesco/Validation.
+     *
+     * Validate if file exists.
+     *
+     * @param string $attribute
+     * @param mixed  $value
+     * @param array  $parameters
+     *
+     * @return bool
+     */
+    public function validateFileExists($attribute, $value, $parameters)
+    {
+        return RuleFactory::make('exists', [])->validate($value);
+    }
+
+    /**
+     * Based by code from  https://gist.github.com/paulofreitas/4704673.
+     *
+     * Validate if file exists.
+     *
+     * @param string $attribute
+     * @param mixed  $value
+     * @param array  $parameters
+     *
+     * @return bool
+     */
+    public function validateTituloEleitoral($attribute, $value, $parameters)
+    {
+        // Canonicalize input and parse UF
+        $te = sprintf('%012s', $value);
+        $uf = (int) (substr($value, 8, 2));
+        // Validate length and invalid UFs
+        if ((12 !== strlen($te))
+            || ($uf < 1)
+            || ($uf > 28)) {
+            return false;
+        }
+        // Validate check digits using a slightly modified modulus 11 algorithm
+        foreach ([7, 8 => 10] as $s => $t) {
+            for ($d = 0, $p = 2, $c = $t; $c >= $s; $c--, $p++) {
+                $d += $te[$c] * $p;
+            }
+            if ($te[($s) ? 11 : 10] !== ((($d %= 11) < 2) ? (($uf < 3) ? 1 - $d
+                : 0)
+                : 11 - $d)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Based by code from  https://gist.github.com/paulofreitas/4704673.
+     *
+     * Validate if file exists.
+     *
+     * @param string $attribute
+     * @param mixed  $value
+     * @param array  $parameters
+     *
+     * @return bool
+     */
+    public function validateNis($attribute, $value, $parameters)
+    {
+        // Canonicalize input
+        $nis = sprintf('%011s', $value);
+        // Validate length and invalid numbers
+        if ((11 !== strlen($nis))
+            || (0 === (int) $nis)) {
+            return false;
+        }
+        // Validate check digit using a modulus 11 algorithm
+        for ($d = 0, $p = 2, $c = 9; $c >= 0; $c--, ($p < 9) ? $p++ : $p = 2) {
+            $d += $nis[$c] * $p;
+        }
+
+        return $nis[10] === (((10 * $d) % 11) % 10);
+    }
+
+    /**
+     * Replace all params the MinTime rule.
+     *
+     * @param string $message
+     * @param string $attribute
+     * @param string $rule
+     * @param array  $parameters
+     *
+     * @return string
+     */
+    protected function replaceMinTime($message, $attribute, $rule, $parameters)
+    {
+        $other = $this->getDisplayableAttribute($parameters[0]);
+
+        return str_replace(':other', $other, $message);
+    }
+
+    /**
+     * Replace all params the AfterTime rule.
+     *
+     * @param string $message
+     * @param string $attribute
+     * @param string $rule
+     * @param array  $parameters
+     *
+     * @return string
+     */
+    protected function replaceAfterTime($message, $attribute, $rule, $parameters)
+    {
+        $other = $this->getDisplayableAttribute($parameters[0]);
+
+        return str_replace(':other', $other, $message);
+    }
+
+    /**
+     * Replace all error message place-holders with actual values.
+     *
+     * @param string $message
+     * @param string $attribute
+     * @param string $rule
+     * @param array  $parameters
+     *
+     * @return string
+     */
+    protected function doReplacements($message, $attribute, $rule, $parameters)
+    {
+        $message = parent::doReplacements($message, $attribute, $rule, $parameters);
+        $search = [];
+        foreach ($parameters as $key => $parameter) {
+            array_push($search, ':parameter'.$key);
+        }
+
+        return str_replace($search, $parameters, $message);
+    }
+
+    /**
+     * Verify is Implicit rule and add implicit extensions.
+     *
+     * @param string
+     * @param mixed $rule
+     *
+     * @return array
+     */
+    protected function isImplicit($rule)
+    {
+        return in_array($rule, array_merge($this->addImplicitExtension, $this->implicitRules), true);
+    }
+
+    /**
+     * Validate that an attribute exists when another attribute has a given value.
+     *
+     * @param string $attribute
+     * @param mixed  $value
+     * @param mixed  $parameters
+     *
+     * @return bool
+     */
+    protected function validateRequiredIfNot($attribute, $value, $parameters)
+    {
+        $this->requireParameterCount(2, $parameters, 'required_if_not');
+
+        $data = array_get($this->data, $parameters[0]);
+
+        $values = array_slice($parameters, 1);
+
+        if (!in_array($data, $values, true)) {
+            return $this->validateRequired($attribute, $value);
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate uuid
+     * by @ericson.
+     *
+     * @param string $attribute
+     * @param mixed  $value
+     * @param mixed  $parameters
+     *
+     * @return bool
+     */
+    protected function validateUuid($attribute, $value, $parameters)
+    {
+        return 1 === preg_match('/^[[:xdigit:]]{8}\-[[:xdigit:]]{4}\-[[:xdigit:]]{4}\-[[:xdigit:]]{4}\-[[:xdigit:]]{12}$/', $value);
+    }
+
+    /**
+     * Replace all place-holders for the required_if rule.
+     *
+     * @param string $message
+     * @param string $attribute
+     * @param string $rule
+     * @param array  $parameters
+     *
+     * @return string
+     */
+    protected function replaceRequiredIfNot($message, $attribute, $rule, $parameters)
+    {
+        $values = implode(',', array_slice($parameters, 1));
+        $other = $parameters[0];
+
+        $message = str_replace(':other', $other, $message);
+        $message = str_replace(':value', $values, $message);
+
+        return $message;
     }
 
     /**
@@ -419,111 +627,12 @@ class Validator extends BaseValidator
     /**
      * Copied code from  KennedyTedesco/Validation.
      *
-     * Validate a minimum age.
-     *
-     * @param  string  $attribute
-     * @param  mixed   $value
-     * @param  array   $parameters
-     *
-     * @return bool
-     */
-    public function validateMinimumAge($attribute, $value, $parameters)
-    {
-        $parameter = (int) $parameters[0];
-
-        return RuleFactory::make('MinimumAge', [$parameter])->validate($value);
-    }
-
-    /**
-     * Copied code from  KennedyTedesco/Validation.
-     *
-     * Validate if file exists.
-     *
-     * @param  string  $attribute
-     * @param  mixed   $value
-     * @param  array   $parameters
-     *
-     * @return bool
-     */
-    public function validateFileExists($attribute, $value, $parameters)
-    {
-        return RuleFactory::make('exists', [])->validate($value);
-    }
-
-    /**
-     * Based by code from  https://gist.github.com/paulofreitas/4704673.
-     *
-     * Validate if file exists.
-     *
-     * @param  string  $attribute
-     * @param  mixed   $value
-     * @param  array   $parameters
-     *
-     * @return bool
-     */
-    public function validateTituloEleitoral($attribute, $value, $parameters)
-    {
-        // Canonicalize input and parse UF
-        $te = sprintf('%012s', $value);
-        $uf = intval(substr($value, 8, 2));
-        // Validate length and invalid UFs
-        if ((strlen($te) != 12)
-            || ($uf < 1)
-            || ($uf > 28)) {
-            return false;
-        }
-        // Validate check digits using a slightly modified modulus 11 algorithm
-        foreach ([7, 8 => 10] as $s => $t) {
-            for ($d = 0, $p = 2, $c = $t; $c >= $s; $c--, $p++) {
-                $d += $te[$c] * $p;
-            }
-            if ($te[($s) ? 11 : 10] != ((($d %= 11) < 2) ? (($uf < 3) ? 1 - $d
-                : 0)
-                : 11 - $d)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Based by code from  https://gist.github.com/paulofreitas/4704673.
-     *
-     * Validate if file exists.
-     *
-     * @param  string  $attribute
-     * @param  mixed   $value
-     * @param  array   $parameters
-     *
-     * @return bool
-     */
-    public function validateNis($attribute, $value, $parameters)
-    {
-        // Canonicalize input
-        $nis = sprintf('%011s', $value);
-        // Validate length and invalid numbers
-        if ((strlen($nis) != 11)
-            || (intval($nis) == 0)) {
-            return false;
-        }
-        // Validate check digit using a modulus 11 algorithm
-        for ($d = 0, $p = 2, $c = 9; $c >= 0; $c--, ($p < 9) ? $p++ : $p = 2) {
-            $d += $nis[$c] * $p;
-        }
-
-        return ($nis[10] == (((10 * $d) % 11) % 10));
-    }
-
-    /**
-     * Copied code from  KennedyTedesco/Validation.
-     *
      * Replace all place-holders for the MinimumAge rule.
      *
-     * @param  string  $message
-     * @param  string  $attribute
-     * @param  string  $rule
-     * @param  array   $parameters
+     * @param string $message
+     * @param string $attribute
+     * @param string $rule
+     * @param array  $parameters
      *
      * @return string
      */
@@ -537,10 +646,10 @@ class Validator extends BaseValidator
      *
      * Replace all place-holders for the Contains rule.
      *
-     * @param  string  $message
-     * @param  string  $attribute
-     * @param  string  $rule
-     * @param  array   $parameters
+     * @param string $message
+     * @param string $attribute
+     * @param string $rule
+     * @param array  $parameters
      *
      * @return string
      */
@@ -554,10 +663,10 @@ class Validator extends BaseValidator
      *
      * Replace all place-holders for the Charset rule.
      *
-     * @param  string  $message
-     * @param  string  $attribute
-     * @param  string  $rule
-     * @param  array   $parameters
+     * @param string $message
+     * @param string $attribute
+     * @param string $rule
+     * @param array  $parameters
      *
      * @return string
      */
@@ -571,10 +680,10 @@ class Validator extends BaseValidator
      *
      * Replace all place-holders for the EndsWith rule.
      *
-     * @param  string  $message
-     * @param  string  $attribute
-     * @param  string  $rule
-     * @param  array   $parameters
+     * @param string $message
+     * @param string $attribute
+     * @param string $rule
+     * @param array  $parameters
      *
      * @return string
      */
@@ -588,10 +697,11 @@ class Validator extends BaseValidator
      *
      * Replace all place-holders for the Multiple rule.
      *
-     * @param  string  $message
-     * @param  string  $attribute
-     * @param  string  $rule
-     * @param  array   $parameters
+     * @param string $message
+     * @param string $attribute
+     * @param string $rule
+     * @param array  $parameters
+     *
      * @return string
      */
     protected function replaceMultiple($message, $attribute, $rule, $parameters)
