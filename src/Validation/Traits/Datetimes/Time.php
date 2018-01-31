@@ -2,7 +2,7 @@
 
 namespace ResultSystems\Validation\Traits\Datetimes;
 
-class Time
+trait Time
 {
     /**
      * Valid time.
