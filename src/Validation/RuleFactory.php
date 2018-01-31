@@ -1,6 +1,6 @@
 <?php
 
-#Copy of KennedyTedesco\Validation;
+//Copy of KennedyTedesco\Validation;
 
 namespace ResultSystems\Validation;
 
@@ -27,6 +27,7 @@ final class RuleFactory
         'String' => 'StringType',
         'True' => 'TrueVal',
     ];
+
     /**
      * @param mixed $rule
      * @param array $parameters
@@ -40,6 +41,7 @@ final class RuleFactory
 
         return $validator->newInstanceArgs($parameters);
     }
+
     /**
      * @param mixed $rule
      *
