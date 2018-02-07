@@ -2,6 +2,8 @@
 
 namespace ResultSystems\Validation\Traits\Datetimes;
 
+use Illuminate\Support\Arr;
+
 trait AfterTime
 {
     /**
@@ -26,6 +28,7 @@ trait AfterTime
         $other = Arr::get($this->data, $parameters[0]);
 
         $time = $this->validateTime($parameters[0], $other, []);
+
         if (!$time) {
             return false;
         }

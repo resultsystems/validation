@@ -2,6 +2,8 @@
 
 namespace ResultSystems\Validation\Traits\Datetimes;
 
+use Illuminate\Support\Arr;
+
 trait MinTime
 {
     /**
