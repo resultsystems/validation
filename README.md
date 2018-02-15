@@ -35,12 +35,12 @@ In the **require** key of **composer.json** file add the following:
 "resultsystems/validation": "~4.0"
 ```
 
-### For Laravel 5.5
+### For Laravel 5.5~5.6
 
 In the **require** key of **composer.json** file add the following:
 
 ```php
-"resultsystems/validation": "~5.0"
+"resultsystems/validation": "~5.1"
 ```
 
 **Important:** Do not use `dev-master`. Instead, use the tagged version, like shown before.
