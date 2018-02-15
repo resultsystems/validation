@@ -1,60 +1,10 @@
 [Vídeo tutorial PT-BR](https://www.youtube.com/watch?v=z451-TPk79w)
 
-Validation (Laravel Package)
+Validation (Laravel 5.X Package) 
 ==========
-
-### For Laravel 5.0/5.1
-
-In the **require** key of **composer.json** file add the following:
-
-```php
-"resultsystems/validation": "~1.0"
-```
-
-### For Laravel 5.2
-
-In the **require** key of **composer.json** file add the following:
-
-```php
-"resultsystems/validation": "~2.0"
-```
-
-### For Laravel 5.3
-
-In the **require** key of **composer.json** file add the following:
-
-```php
-"resultsystems/validation": "~3.0"
-```
-
-### For Laravel 5.4
-
-In the **require** key of **composer.json** file add the following:
-
-```php
-"resultsystems/validation": "~4.0"
-```
-
-### For Laravel 5.5~5.6
-
-In the **require** key of **composer.json** file add the following:
-
-```php
-"resultsystems/validation": "~5.1"
-```
-
-**Important:** Do not use `dev-master`. Instead, use the tagged version, like shown before.
-
-Run the Composer **update** comand:
-
-```php
-composer update
-```
-or
 
 ```php
 composer require resultsystems/validation
-```
 
 
 In your **config/app.php** add *'ResultSystems\Validation\ValidationServiceProvider::class'* to the end of the **'providers'** array:
