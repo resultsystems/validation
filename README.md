@@ -5,7 +5,7 @@ Validation (Laravel 5.X Package)
 
 ```php
 composer require resultsystems/validation
-
+```
 
 In your **config/app.php** add *'ResultSystems\Validation\ValidationServiceProvider::class'* to the end of the **'providers'** array:
 
