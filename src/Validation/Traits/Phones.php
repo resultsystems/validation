@@ -13,15 +13,41 @@ trait Phones
      *
      * @return bool
      */
+    public function validateOnlyPhoneBr($attribute, $value, $parameters)
+    {
+        $result = false;
+
+        // Verifica telefones
+        // 0XX XXXX-XXXX
+        // XX XXXX-XXXX
+        // XXXX-XXXX
+        $result = preg_match('/^(0?[1-9]{2})?([2-5][0-9]{7})$/', $value, $matches);
+        if ($result) {
+            return true;
+        }
+
+        //Verifica 0800
+        return preg_match('/^0800([0-9]{7,8})$/', $value, $matches);
+    }
+
+    /**
+     * valida Telefone.
+     *
+     * @param string $attribute
+     * @param string $value
+     * @param string $parameters
+     *
+     * @return bool
+     */
     public function validatePhoneBr($attribute, $value, $parameters)
     {
         $result = false;
 
-        //Verifica telefones
-        // 0XX XXXX-XXXX
-        // XX XXXX-XXXX
-        // XXXX - XXXX
-        $result = preg_match('/^(0?[1-9]{2})?(([2-9][0-9]{7})|(9[0-9][0-9]{7}))$/', $value, $matches);
+        // Verifica telefones
+        // 0XX [9]XXXX-XXXX
+        // XX [9]XXXX-XXXX
+        // [9]XXXX - XXXX
+        $result = preg_match('/^(0?[1-9]{2})?(([2-9][0-9]{7})|(9[0-9]{8}))$/', $value, $matches);
         if ($result) {
             return true;
         }
@@ -62,11 +88,11 @@ trait Phones
     {
         $result = false;
 
-        //Verifica telefones
-        // 0XX XXXX-XXXX
-        // XX XXXX-XXXX
-        // XXXX - XXXX
-        return preg_match('/^(0?[1-9]{2})?(([6-9][0-9]{7})|(9[0-9][0-9]{7}))$/', $value, $matches);
+        // Verifica celulares
+        // 0XX 9XXXX-XXXX
+        // XX 9XXXX-XXXX
+        // 9XXXX-XXXX
+        return preg_match('/^(0?[1-9]{2})?(9[0-9]{8})$/', $value, $matches);
     }
 
     public function validateCelular($attribute, $value, $parameters)
