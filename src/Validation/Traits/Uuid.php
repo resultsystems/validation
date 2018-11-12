@@ -5,17 +5,18 @@ namespace ResultSystems\Validation\Traits;
 trait Uuid
 {
     /**
-     * Validate uuid
-     * by @ericson.
+     * Validate that an attribute is a valid UUID.
      *
-     * @param string $attribute
-     * @param mixed  $value
-     * @param mixed  $parameters
-     *
+     * @param  string  $attribute
+     * @param  mixed  $value
      * @return bool
      */
-    protected function validateUuid($attribute, $value, $parameters)
+    public function validateUuid($attribute, $value)
     {
-        return 1 === preg_match('/^[[:xdigit:]]{8}\-[[:xdigit:]]{4}\-[[:xdigit:]]{4}\-[[:xdigit:]]{4}\-[[:xdigit:]]{12}$/', $value);
+        if (!is_string($value)) {
+            return false;
+        }
+
+        return preg_match('/^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$/iD', $value) > 0;
     }
 }
