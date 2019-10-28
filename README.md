@@ -1,13 +1,12 @@
 [Vídeo tutorial PT-BR](https://www.youtube.com/watch?v=z451-TPk79w)
 
-Validation (Laravel 5.X Package) 
-==========
+# Validation (Laravel 5.X/6.X Package)
 
 ```php
 composer require resultsystems/validation
 ```
 
-In your **config/app.php** add *'ResultSystems\Validation\ValidationServiceProvider::class'* to the end of the **'providers'** array:
+In your **config/app.php** add _'ResultSystems\Validation\ValidationServiceProvider::class'_ to the end of the **'providers'** array:
 
 ```php
 'providers' => array(
