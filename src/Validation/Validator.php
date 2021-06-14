@@ -56,6 +56,20 @@ class Validator extends BaseValidator
     }
 
     /**
+     * Validate that an attribute is a boolean.
+     *
+     * @param  string  $attribute
+     * @param  mixed  $value
+     * @return bool
+     */
+    public function validateBooleanString($attribute, $value)
+    {
+        $acceptable = [true, false, 0, 1, '0', '1', 'false', 'true'];
+
+        return in_array($value, $acceptable, true);
+    }
+
+    /**
      * Copied code from  KennedyTedesco/Validation.
      *
      * Replace all place-holders for the MinimumAge rule.
