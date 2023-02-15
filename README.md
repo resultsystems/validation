@@ -1,6 +1,6 @@
 [Vídeo tutorial PT-BR](https://www.youtube.com/watch?v=z451-TPk79w)
 
-# Validation (Laravel 5.X ~ 9.X Package)
+# Validation (Laravel 5.X ~ 10.X Package)
 
 ```php
 composer require resultsystems/validation
