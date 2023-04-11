@@ -113,9 +113,9 @@ trait CountryRegister
      *
      * @return bool
      */
-    public function validateCnpjCpfMascara($attribute, $value, $parameters)
+    public function validateCnpjCpfMask($attribute, $value, $parameters)
     {
-        return $this->validateCnpjCpf($attribute, preg_replace('/\D/', '', $value), $parameters);
+        return $this->validateCnpjCpf($attribute, $this->clearCountryRegistry($value), $parameters);
     }
 
     /**
