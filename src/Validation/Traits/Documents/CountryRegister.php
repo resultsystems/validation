@@ -56,7 +56,7 @@ trait CountryRegister
         return strlen($value) > 11;
     }
 
-    private function clearCountryRegistry(string $document)
+    public function clearCountryRegistry(string $document)
     {
         return preg_replace('/[^0-9]/', '', $document);
     }
