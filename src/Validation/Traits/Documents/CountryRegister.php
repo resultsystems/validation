@@ -23,15 +23,13 @@ trait CountryRegister
             return false;
         }
 
-        for ($i = 0, $n = 0; $i < 12; $n += $value[$i] * $b[++$i]) {
-        }
+        for ($i = 0, $n = 0; $i < 12; $n += $value[$i] * $b[++$i]) ;
 
         if ((int) $value[12] !== (int) ((($n %= 11) < 2) ? 0 : 11 - $n)) {
             return false;
         }
 
-        for ($i = 0, $n = 0; $i <= 12; $n += $value[$i] * $b[$i++]) {
-        }
+        for ($i = 0, $n = 0; $i <= 12; $n += $value[$i] * $b[$i++]) ;
 
         if ((int) $value[13] !== (int) ((($n %= 11) < 2) ? 0 : 11 - $n)) {
             return false;
@@ -49,9 +47,9 @@ trait CountryRegister
      *
      * @return bool
      */
-    public function validateCnpjMascara($attribute, $value, $parameters)
+    public function validateCnpjMask($attribute, $value, $parameters)
     {
-        return $this->validateCnpj($attribute, preg_replace('/\D/', '', $value), $parameters);
+        return $this->validateCnpj($attribute, $this->clearCountryRegistry($value), $parameters);
     }
 
     /**
@@ -65,27 +63,13 @@ trait CountryRegister
      */
     public function validateCpf($attribute, $value, $parameters)
     {
-        // Code ported from Respect\Validation\Rules\Cpf
-        //        $value = preg_replace('/\D/', '', $value);
-        if (11 !== strlen($value) || preg_match("/^{$value[0]}{11}$/", $value)) {
+        $cpf = $value;
+        if (preg_match("/^{$cpf[0]}{11}$/", $cpf)) {
             return false;
         }
+        $generate_cpf = $this->cpfAddDigits(substr($cpf, 0, 9));
 
-        for ($s = 10, $n = 0, $i = 0; $s >= 2; $n += $value[$i++] * $s--) {
-        }
-
-        if ((int) $value[9] !== (int) ((($n %= 11) < 2) ? 0 : 11 - $n)) {
-            return false;
-        }
-
-        for ($s = 11, $n = 0, $i = 0; $s >= 2; $n += $value[$i++] * $s--) {
-        }
-
-        if ((int) $value[10] !== (int) ((($n %= 11) < 2) ? 0 : 11 - $n)) {
-            return false;
-        }
-
-        return true;
+        return $generate_cpf === $cpf;
     }
 
     /**
@@ -97,9 +81,9 @@ trait CountryRegister
      *
      * @return bool
      */
-    public function validateCpfMascara($attribute, $value, $parameters)
+    public function validateCpfMask($attribute, $value, $parameters)
     {
-        return $this->validateCpf($attribute, preg_replace('/\D/', '', $value), $parameters);
+        return $this->validateCpf($attribute, $this->clearCountryRegistry($value), $parameters);
     }
 
     /**
@@ -135,38 +119,6 @@ trait CountryRegister
     }
 
     /**
-     * valida CPF/CNPJ possibilitando ter números zerados.
-     *
-     * @param string $attribute
-     * @param string $value
-     * @param string $parameters
-     *
-     * @return bool
-     */
-    public function validateCnpjCpfZero($attribute, $value, $parameters)
-    {
-        if ('00000000000' === (string) $value || '00000000000000' === (string) $value) {
-            return true;
-        }
-
-        return $this->validateCnpjCpf($attribute, $value, $parameters);
-    }
-
-    /**
-     * Valida Cnpj/Cpf com Mascara (tudo zero).
-     *
-     * @param string $attribute
-     * @param string $value
-     * @param string $parameters
-     *
-     * @return bool
-     */
-    public function validateCnpjCpfZeroMascara($attribute, $value, $parameters)
-    {
-        return $this->validateCnpjCpfZero($attribute, preg_replace('/\D/', '', $value), $parameters);
-    }
-
-    /**
      * Verifica se o tamanho pode ser um CNPJ.
      *
      * @param string $value
@@ -175,6 +127,34 @@ trait CountryRegister
      */
     public function isCnpj($value = '')
     {
+        $value = $this->clearCountryRegistry($value);
+
         return strlen($value) > 11;
+    }
+
+    private function clearCountryRegistry(string $document)
+    {
+        return preg_replace('/[^0-9]/', '', $document);
+    }
+
+    private function cpfAddDigits(string $digits)
+    {
+        $digitVerify1 = $this->calculateCpfDigit($digits);
+        $digitVerify2 = $this->calculateCpfDigit("{$digits}{$digitVerify1}");
+
+        return $digits . $digitVerify1 . $digitVerify2;
+    }
+
+    private function calculateCpfDigit(string $digits)
+    {
+        $array_digits  = str_split($digits);
+        $reverse_index = count($array_digits) + 1;
+        array_walk($array_digits, function (&$value, $key) use ($reverse_index) {
+            return $value = (int) $value * ($reverse_index - $key);
+        });
+        $sum_digits = array_sum($array_digits);
+        $rest       = $sum_digits % 11;
+
+        return $rest < 2 ? 0 : 11 - $rest;
     }
 }
