@@ -15,6 +15,10 @@ trait CPF
      */
     public function validateCpf($attribute, $value, $parameters)
     {
+        if (11 !== strlen($value)) {
+            return false;
+        }
+
         $cpf = $value;
         if (preg_match("/^{$cpf[0]}{11}$/", $cpf)) {
             return false;
