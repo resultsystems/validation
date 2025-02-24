@@ -20,7 +20,7 @@ trait CPF
         }
 
         $cpf = $value;
-        if (preg_match("/^{$cpf[0]}{11}$/", $cpf)) {
+        if (preg_match("/^{$cpf}{11}$/", $cpf)) {
             return false;
         }
         $generate_cpf = $this->cpfAddDigits(substr($cpf, 0, 9));
