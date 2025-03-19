@@ -11,7 +11,7 @@ trait Uuid
      * @param  mixed  $value
      * @return bool
      */
-    public function validateUuid($attribute, $value)
+    public function validateUuid($attribute, $value, $parameters)
     {
         if (!is_string($value)) {
             return false;
