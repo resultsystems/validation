@@ -69,6 +69,7 @@ assertFalse($validator->validateCnpj('cnpj', '11444777000162'), 'CNPJ tradiciona
 assertTrue($validator->validateCnpj('cnpj', 'A2YAJLFF6GQE88'), 'CNPJ alfanumérico válido');
 assertTrue($validator->validateCnpj('cnpj', 'CIAREISLTDA110'), 'CNPJ alfanumérico válido');
 assertTrue($validator->validateCnpj('cnpj', '11.111.CIA/REIS-77'), 'CNPJ alfanumérico válido');
+assertTrue($validator->validateCnpj('cnpj', 'VA.LOR.CIA/REIS-21'), 'CNPJ alfanumérico válido');
 
 
 // Exemplo alfanumérico inválido
