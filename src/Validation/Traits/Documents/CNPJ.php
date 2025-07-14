@@ -4,6 +4,16 @@ namespace ResultSystems\Validation\Traits\Documents;
 
 trait CNPJ
 {
+    protected function cnpjCharValue(string $c): int
+    {
+        if (ctype_digit($c)) {
+            return (int) $c;
+        }
+        $ascii = ord($c);
+        return $ascii - 48; // A(65) -> 17, B(66)->18, etc
+    }
+
+
     /**
      * Valida Cnpj.
      *
@@ -13,25 +23,34 @@ trait CNPJ
      *
      * @return bool
      */
-    public function validateCnpj($attribute, $value, $parameters)
+    public function validateCnpj(string $attribute, string $value, string $parameters): bool
     {
-        // Code ported from Respect\Validation\Rules\Cnpj
-        //        $value = preg_replace('/\D/', '', $value);
-        $b = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+        $value = strtoupper(preg_replace('/[^A-Z0-9]/', '', $value));
 
-        if (14 !== strlen($value)) {
+        if (!preg_match('/^[A-Z0-9]{12}[0-9]{2}$/', $value)) {
             return false;
         }
 
-        for ($i = 0, $n = 0; $i < 12; $n += $value[$i] * $b[++$i]) ;
+        $weights1 = [5,4,3,2,9,8,7,6,5,4,3,2];
+        $weights2 = [6,5,4,3,2,9,8,7,6,5,4,3,2];
 
-        if ((int) $value[12] !== (int) ((($n %= 11) < 2) ? 0 : 11 - $n)) {
+        // Converte os 12 caracteres iniciais
+        $nums = array_map([$this, 'cnpjCharValue'], str_split(substr($value, 0, 12)));
+
+        // 1º DV
+        $sum = array_sum(array_map(fn ($n, $w) => $n * $w, $nums, $weights1));
+        $r = $sum % 11;
+        $d1 = ($r < 2) ? 0 : 11 - $r;
+        if ((int)$value[12] !== $d1) {
             return false;
         }
 
-        for ($i = 0, $n = 0; $i <= 12; $n += $value[$i] * $b[$i++]) ;
-
-        if ((int) $value[13] !== (int) ((($n %= 11) < 2) ? 0 : 11 - $n)) {
+        // Inclui o primeiro DV e calcula o segundo
+        $nums[] = $d1;
+        $sum = array_sum(array_map(fn ($n, $w) => $n * $w, $nums, $weights2));
+        $r = $sum % 11;
+        $d2 = ($r < 2) ? 0 : 11 - $r;
+        if ((int)$value[13] !== $d2) {
             return false;
         }
 

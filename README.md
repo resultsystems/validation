@@ -1,6 +1,6 @@
 [Vídeo tutorial PT-BR](https://www.youtube.com/watch?v=z451-TPk79w)
 
-# Validation (Laravel 5.X ~ 10.X Package)
+# Validation (Laravel 5.X ~ 12.X Package)
 
 ```php
 composer require resultsystems/validation
@@ -100,8 +100,8 @@ $data = array(
     'titulo_eleitoral'      => '000000000000',
     'cpf'                   => '22205417118',
     'cpf_mask'           => '222.054.171-18',
-    'cnpj'                  => '68518321000116',
-    'cnpj_mask'          => '68.518.321/0001-16',
+    'cnpj'                  => '33300033000106',
+    'cnpj_mask'          => '11.111.CIA/REIS-77',
     'cnpj_cpf'              => '22205417118', // ou 68518321000116
     'telefone'              => '3430353637',
     'telefone_mascara'      => '34 3035-3637',
