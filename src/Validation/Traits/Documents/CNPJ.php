@@ -17,13 +17,9 @@ trait CNPJ
     /**
      * Valida Cnpj.
      *
-     * @param string $attribute
-     * @param string $value
-     * @param string $parameters
-     *
      * @return bool
      */
-    public function validateCnpj(string $attribute, string $value, string $parameters): bool
+    public function validateCnpj(string $attribute, string $value, array $parameters): bool
     {
         $value = strtoupper(preg_replace('/[^A-Z0-9]/', '', $value));
 

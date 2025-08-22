@@ -15,7 +15,7 @@ trait CountryRegister
      *
      * @param string $attribute
      * @param string $value
-     * @param string $parameters
+     * @param array $parameters
      *
      * @return bool
      */
